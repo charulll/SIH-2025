@@ -13,6 +13,11 @@ export default {
       },
     },
     extend: {
+      fontFamily: {
+        'heading': ['Poppins', 'system-ui', 'sans-serif'],
+        'body': ['Roboto', 'system-ui', 'sans-serif'],
+        'display': ['Lato', 'system-ui', 'sans-serif'],
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -22,6 +27,7 @@ export default {
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
+          glow: "hsl(var(--primary-glow))",
         },
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
@@ -47,6 +53,29 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        // Funshiksha Class-specific Colors
+        vibrant: {
+          turquoise: "hsl(var(--vibrant-turquoise))",
+          orange: "hsl(var(--vibrant-orange))",
+          green: "hsl(var(--vibrant-green))",
+          blue: "hsl(var(--vibrant-blue))",
+        },
+        pastel: {
+          blue: "hsl(var(--pastel-blue))",
+          teal: "hsl(var(--pastel-teal))",
+          peach: "hsl(var(--pastel-peach))",
+          yellow: "hsl(var(--pastel-yellow))",
+        },
+        mature: {
+          navy: "hsl(var(--mature-navy))",
+          forest: "hsl(var(--mature-forest))",
+          burgundy: "hsl(var(--mature-burgundy))",
+        },
+        // Educational semantic colors
+        success: "hsl(var(--success))",
+        warning: "hsl(var(--warning))",
+        error: "hsl(var(--error))",
+        info: "hsl(var(--info))",
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
           foreground: "hsl(var(--sidebar-foreground))",
@@ -59,9 +88,23 @@ export default {
         },
       },
       borderRadius: {
-        lg: "var(--radius)",
+        xl: "var(--radius-xl)",
+        lg: "var(--radius-lg)",
+        DEFAULT: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
+      },
+      boxShadow: {
+        'glow': 'var(--shadow-glow)',
+        'sm': 'var(--shadow-sm)',
+        'md': 'var(--shadow-md)',
+        'lg': 'var(--shadow-lg)',
+      },
+      backgroundImage: {
+        'gradient-primary': 'var(--gradient-primary)',
+        'gradient-vibrant': 'var(--gradient-vibrant)',
+        'gradient-warm': 'var(--gradient-warm)',
+        'gradient-success': 'var(--gradient-success)',
       },
       keyframes: {
         "accordion-down": {

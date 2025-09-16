@@ -2,41 +2,89 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
+/* Funshiksha Educational App Design System 
+All colors MUST be HSL. Designed for rural students with vibrant, accessible colors.
 */
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Base Colors */
+    --background: 240 100% 99%;
+    --foreground: 220 20% 15%;
 
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 220 20% 15%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover-foreground: 220 20% 15%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    /* Primary Brand Colors - Educational Blue */
+    --primary: 210 82% 51%;
+    --primary-foreground: 0 0% 98%;
+    --primary-glow: 210 100% 80%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    /* Class-specific Color Schemes */
+    /* Classes 6-8: Vibrant & Fun */
+    --vibrant-turquoise: 189 82% 45%;
+    --vibrant-orange: 25 95% 53%;
+    --vibrant-green: 134 61% 41%;
+    --vibrant-blue: 217 91% 60%;
 
-    --muted: 210 40% 96.1%;
+    /* Classes 9-10: Soft Pastels */
+    --pastel-blue: 210 100% 85%;
+    --pastel-teal: 180 65% 75%;
+    --pastel-peach: 25 100% 85%;
+    --pastel-yellow: 50 100% 80%;
+
+    /* Classes 11-12: Mature & Professional */
+    --mature-navy: 220 39% 25%;
+    --mature-forest: 150 40% 30%;
+    --mature-burgundy: 340 55% 35%;
+
+    /* Educational UI Colors */
+    --success: 134 61% 41%;
+    --warning: 43 96% 56%;
+    --error: 0 84% 60%;
+    --info: 210 82% 51%;
+
+    /* Semantic Colors */
+    --secondary: 210 17% 95%;
+    --secondary-foreground: 220 20% 15%;
+
+    --muted: 210 17% 95%;
     --muted-foreground: 215.4 16.3% 46.9%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 189 82% 45%;
+    --accent-foreground: 0 0% 98%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
 
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --ring: 210 82% 51%;
 
-    --radius: 0.5rem;
+    /* Design Elements */
+    --radius: 0.75rem;
+    --radius-lg: 1rem;
+    --radius-xl: 1.5rem;
+
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--primary-glow)) 100%);
+    --gradient-success: linear-gradient(135deg, hsl(var(--vibrant-green)) 0%, hsl(134 61% 60%) 100%);
+    --gradient-vibrant: linear-gradient(135deg, hsl(var(--vibrant-turquoise)) 0%, hsl(var(--vibrant-blue)) 100%);
+    --gradient-warm: linear-gradient(135deg, hsl(var(--vibrant-orange)) 0%, hsl(var(--pastel-peach)) 100%);
+
+    /* Shadows */
+    --shadow-sm: 0 2px 4px -1px hsl(var(--primary) / 0.1);
+    --shadow-md: 0 4px 12px -2px hsl(var(--primary) / 0.15);
+    --shadow-lg: 0 8px 25px -5px hsl(var(--primary) / 0.2);
+    --shadow-glow: 0 0 20px hsl(var(--primary-glow) / 0.4);
+
+    /* Animations */
+    --animation-bounce: bounce 1s ease-in-out infinite;
+    --animation-pulse: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
     --sidebar-background: 0 0% 98%;
 
@@ -100,6 +148,93 @@ All colors MUST be HSL.
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-body;
   }
+}
+
+@layer components {
+  /* Funshiksha Custom Components */
+  .gradient-primary {
+    background: var(--gradient-primary);
+  }
+  
+  .gradient-vibrant {
+    background: var(--gradient-vibrant);
+  }
+  
+  .gradient-warm {
+    background: var(--gradient-warm);
+  }
+  
+  .gradient-success {
+    background: var(--gradient-success);
+  }
+  
+  .shadow-glow {
+    box-shadow: var(--shadow-glow);
+  }
+  
+  .animate-float {
+    animation: float 3s ease-in-out infinite;
+  }
+  
+  .animate-scale-in {
+    animation: scale-in 0.3s ease-out;
+  }
+  
+  .animate-fade-in {
+    animation: fade-in 0.5s ease-out;
+  }
+  
+  .animate-slide-up {
+    animation: slide-up 0.4s ease-out;
+  }
+  
+  /* Progress Ring Component */
+  .progress-ring {
+    transform: rotate(-90deg);
+    transform-origin: 50% 50%;
+  }
+  
+  /* Interactive Map States */
+  .map-state-correct {
+    fill: hsl(var(--vibrant-green));
+    transition: var(--transition-smooth);
+  }
+  
+  .map-state-unclicked {
+    fill: hsl(320 50% 85%);
+    transition: var(--transition-smooth);
+  }
+  
+  .map-state-incorrect {
+    fill: hsl(var(--error));
+    transition: var(--transition-smooth);
+  }
+  
+  .map-state:hover {
+    stroke: hsl(var(--primary));
+    stroke-width: 2;
+    cursor: pointer;
+  }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes scale-in {
+  0% { transform: scale(0.9); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes fade-in {
+  0% { opacity: 0; transform: translateY(20px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slide-up {
+  0% { transform: translateY(100%); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
 }
