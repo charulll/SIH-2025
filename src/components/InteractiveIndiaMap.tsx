@@ -24,27 +24,30 @@ const InteractiveIndiaMap: React.FC = () => {
   ]);
 
   const [score, setScore] = useState(0);
-  const [currentQuestion, setCurrentQuestion] = useState('Click on Rajasthan');
+  const [currentQuestion, setCurrentQuestion] = useState('🎯 Geography Challenge: Click on Rajasthan to start your journey across India!');
   const [gameCompleted, setGameCompleted] = useState(false);
 
   const handleStateClick = (stateId: string) => {
-    // Simple demo logic - in real app, this would have proper game mechanics
+    // Enhanced Geography & Social Science game mechanics
     if (stateId === 'rajasthan' && currentQuestion.includes('Rajasthan')) {
       setScore(score + 10);
-      setCurrentQuestion('Great! Now click on Maharashtra');
+      setCurrentQuestion('🎉 Excellent! Rajasthan is the largest state by area. Now find Maharashtra - the financial hub of India!');
     } else if (stateId === 'maharashtra' && currentQuestion.includes('Maharashtra')) {
       setScore(score + 10);
-      setCurrentQuestion('Excellent! Click on Karnataka');
+      setCurrentQuestion('🌟 Perfect! Maharashtra has Mumbai, the commercial capital. Now locate Karnataka - home to India\'s Silicon Valley!');
     } else if (stateId === 'karnataka' && currentQuestion.includes('Karnataka')) {
       setScore(score + 10);
       setGameCompleted(true);
-      setCurrentQuestion('Congratulations! Game completed!');
+      setCurrentQuestion('🏆 Outstanding! You\'ve mastered the geography of three major Indian states. You\'re now a Geography Champion!');
+    } else {
+      // Wrong state clicked
+      setCurrentQuestion('🤔 Not quite right! Try again. Look for the state mentioned in the question.');
     }
   };
 
   const resetGame = () => {
     setScore(0);
-    setCurrentQuestion('Click on Rajasthan');
+    setCurrentQuestion('🎯 Geography Challenge: Click on Rajasthan to start your journey across India!');
     setGameCompleted(false);
   };
 
@@ -56,7 +59,7 @@ const InteractiveIndiaMap: React.FC = () => {
           <CardHeader>
             <div className="flex justify-between items-center">
               <CardTitle className="text-2xl font-heading">
-                🗺️ Geography of India - Interactive Map
+                🗺️ Social Science: Geography of India - Interactive Learning
               </CardTitle>
               <div className="flex items-center space-x-4">
                 <Badge className="bg-vibrant-green text-white text-lg px-3 py-1">
@@ -71,15 +74,20 @@ const InteractiveIndiaMap: React.FC = () => {
           </CardHeader>
           <CardContent>
             <div className="text-center">
-              <h3 className="text-xl font-body text-foreground mb-2">
+              <h3 className="text-lg font-body text-foreground mb-4 px-4">
                 {currentQuestion}
               </h3>
               {gameCompleted && (
-                <div className="flex justify-center items-center space-x-2 mt-4">
-                  <Trophy className="w-6 h-6 text-vibrant-orange" />
-                  <span className="text-lg font-heading text-vibrant-orange">
-                    You earned 30 points! 🎉
-                  </span>
+                <div className="bg-gradient-success p-4 rounded-lg text-white mx-4">
+                  <div className="flex justify-center items-center space-x-2 mb-2">
+                    <Trophy className="w-8 h-8 text-white" />
+                    <span className="text-xl font-heading">
+                      Geography Master Achieved! 🎉
+                    </span>
+                  </div>
+                  <p className="text-sm opacity-90">
+                    You've learned about state locations, capitals, and cultural significance!
+                  </p>
                 </div>
               )}
             </div>
@@ -190,15 +198,19 @@ const InteractiveIndiaMap: React.FC = () => {
                 <div className="space-y-3 text-sm font-body">
                   <div className="flex items-start">
                     <div className="w-2 h-2 bg-vibrant-green rounded-full mt-2 mr-3 flex-shrink-0"></div>
-                    <span>Identify major Indian states on the map</span>
+                    <span><strong>Geography:</strong> Identify major Indian states and their locations</span>
                   </div>
                   <div className="flex items-start">
                     <div className="w-2 h-2 bg-vibrant-orange rounded-full mt-2 mr-3 flex-shrink-0"></div>
-                    <span>Learn state capitals and their locations</span>
+                    <span><strong>Social Science:</strong> Learn state capitals, cultural significance, and economic importance</span>
                   </div>
                   <div className="flex items-start">
                     <div className="w-2 h-2 bg-vibrant-blue rounded-full mt-2 mr-3 flex-shrink-0"></div>
-                    <span>Understand geographical positioning</span>
+                    <span><strong>History:</strong> Understand historical and geographical positioning of states</span>
+                  </div>
+                  <div className="flex items-start">
+                    <div className="w-2 h-2 bg-accent rounded-full mt-2 mr-3 flex-shrink-0"></div>
+                    <span><strong>Civics:</strong> Learn about state governance and administrative divisions</span>
                   </div>
                 </div>
               </CardContent>
