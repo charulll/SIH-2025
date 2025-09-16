@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import funshikshaLogo from '@/assets/funshiksha-official-logo.jpg';
+import funshikshaLogo from '@/assets/funshiksha-logo-official.jpg';
 
 interface SplashScreenProps {
   onComplete: () => void;
