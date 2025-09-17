@@ -1,10 +1,7 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-
-interface LanguageSelectionProps {
-  onLanguageSelect: (language: string) => void;
-}
 
 const languages = [
   { code: 'en', name: 'English', native: 'English' },
@@ -12,7 +9,15 @@ const languages = [
   { code: 'or', name: 'Odia', native: 'ଓଡ଼ିଆ' }
 ];
 
-const LanguageSelection: React.FC<LanguageSelectionProps> = ({ onLanguageSelect }) => {
+const LanguageSelection: React.FC = () => {
+  const navigate = useNavigate();
+
+  const handleLanguageSelect = (languageCode: string) => {
+  console.log("Language selected:", languageCode); // ✅ check in console
+  localStorage.setItem("language", languageCode);
+  navigate("/class-selection");
+};
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-vibrant p-4">
       <Card className="w-full max-w-md mx-auto animate-scale-in shadow-lg">
@@ -31,7 +36,7 @@ const LanguageSelection: React.FC<LanguageSelectionProps> = ({ onLanguageSelect 
               {languages.map((language) => (
                 <Button
                   key={language.code}
-                  onClick={() => onLanguageSelect(language.code)}
+                  onClick={() => handleLanguageSelect(language.code)}
                   variant="outline"
                   size="lg"
                   className="w-full h-16 text-lg font-body hover:bg-vibrant-turquoise hover:text-white hover:border-vibrant-turquoise transition-all duration-300 hover:scale-105"

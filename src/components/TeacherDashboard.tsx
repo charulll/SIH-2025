@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+// src/components/TeacherDashboard.tsx
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -16,11 +18,11 @@ import {
   MessageSquare
 } from 'lucide-react';
 
-interface TeacherDashboardProps {
-  teacherName: string;
-  teacherId: string;
-  onBack: () => void;
-}
+type LocalTeacher = {
+  login_id: string;
+  name?: string;
+  subject?: string;
+};
 
 const classes = [
   { id: '6A', name: 'Class 6-A', students: 32, avgProgress: 67, subjects: 4 },
@@ -34,12 +36,32 @@ const recentActivities = [
   { student: 'Amit Patel', class: '8C', activity: 'Achieved Science Badge', score: '90%', time: '5 hours ago' },
 ];
 
-const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ 
-  teacherName, 
-  teacherId, 
-  onBack 
-}) => {
+const TeacherDashboard: React.FC = () => {
   const [selectedClass, setSelectedClass] = useState<string | null>(null);
+  const [teacher, setTeacher] = useState<LocalTeacher | null>(null);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const raw = localStorage.getItem('teacher');
+    if (!raw) {
+      // if no teacher in storage, send to login
+      navigate('/teacher-auth');
+      return;
+    }
+    try {
+      const parsed: LocalTeacher = JSON.parse(raw);
+      setTeacher(parsed);
+    } catch (err) {
+      // corrupted data -> clear and redirect
+      localStorage.removeItem('teacher');
+      navigate('/teacher-auth');
+    }
+  }, [navigate]);
+
+  const handleBack = () => {
+    // go to home or previous screen — change path if you need a different target
+    navigate('/');
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -47,7 +69,7 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
       <div className="bg-gradient-primary text-white p-6">
         <div className="flex justify-between items-center mb-4">
           <Button
-            onClick={onBack}
+            onClick={handleBack}
             variant="ghost"
             className="text-white hover:bg-white/20"
           >
@@ -55,13 +77,13 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
             Home
           </Button>
           <Badge variant="secondary" className="bg-white/20 text-white border-white/30">
-            Teacher ID: {teacherId}
+            Teacher ID: {teacher?.login_id ?? '—'}
           </Badge>
         </div>
         
         <div className="text-center">
           <h1 className="text-3xl font-heading font-bold mb-2">
-            Welcome, {teacherName}
+            Welcome, {teacher?.name ?? teacher?.login_id ?? 'Teacher'}
           </h1>
           <p className="text-lg font-body opacity-90">
             Teacher Dashboard - Monitor and Guide Student Progress
@@ -248,5 +270,4 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
     </div>
   );
 };
-
 export default TeacherDashboard;

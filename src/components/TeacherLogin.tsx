@@ -3,30 +3,45 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { User, KeyRound, School, Home } from 'lucide-react';
+import { Home, KeyRound, School, User } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
-interface TeacherLoginProps {
-  onLogin: (name: string, loginId: string) => void;
-  onBack: () => void;
-}
-
-const TeacherLogin: React.FC<TeacherLoginProps> = ({ onLogin, onBack }) => {
+const TeacherLogin: React.FC = () => {
   const [name, setName] = useState('');
   const [loginId, setLoginId] = useState('');
   const [password, setPassword] = useState('');
+  const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (name.trim() && loginId.trim() && password.trim()) {
-      onLogin(name.trim(), loginId.trim());
+
+    // Example login logic
+    try {
+      const res = await fetch('http://localhost:5000/teacher/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ loginId, password }),
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        localStorage.setItem('teacher', JSON.stringify(data.teacher));
+        navigate('/teacher-dashboard');
+      } else {
+        alert(data.message || 'Login failed');
+      }
+    } catch (err) {
+      alert('Server error');
     }
   };
 
+  // ✅ Your return must be inside the component
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-primary p-4">
       <div className="w-full max-w-md mx-auto animate-scale-in">
         <Button
-          onClick={onBack}
+          onClick={() => navigate('/')}
           variant="ghost"
           className="mb-4 text-white hover:bg-white/20"
         >
@@ -121,7 +136,10 @@ const TeacherLogin: React.FC<TeacherLoginProps> = ({ onLogin, onBack }) => {
         </Card>
       </div>
     </div>
+    
   );
 };
 
-export default TeacherLogin;
+export default TeacherLogin
+
+

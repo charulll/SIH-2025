@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+// src/components/StudentDashboard.tsx
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { 
-  BookOpen, 
-  MapPin, 
   Calculator, 
   Atom, 
   Globe, 
@@ -16,14 +16,13 @@ import {
   Play
 } from 'lucide-react';
 import InteractiveIndiaMap from './InteractiveIndiaMap';
-import ArithmeticPage from './Arithmetic'; 
+import ArithmeticPage from './Arithmetic';
 
-interface StudentDashboardProps {
-  studentName: string;
-  studentRoll: string;
-  selectedClass: number;
-  onBack: () => void;
-}
+type LocalStudent = {
+  name: string;
+  roll_number: string;
+  class: number;
+};
 
 const subjects = [
   {
@@ -60,22 +59,34 @@ const subjects = [
   }
 ];
 
-const StudentDashboard: React.FC<StudentDashboardProps> = ({ 
-  studentName, 
-  studentRoll, 
-  selectedClass, 
-  onBack 
-}) => {
+const StudentDashboard: React.FC = () => {
+  const navigate = useNavigate();
+  const [student, setStudent] = useState<LocalStudent | null>(null);
   const [expandedSubject, setExpandedSubject] = useState<string | null>(null);
-  const [showMapGame, setShowMapGame] = useState(false);
-   const [activeSubject, setActiveSubject] = useState<string | null>(null);
+  const [activeSubject, setActiveSubject] = useState<string | null>(null);
   const [activeTopic, setActiveTopic] = useState<string | null>(null);
+
+  // Load student from localStorage
+  useEffect(() => {
+    const raw = localStorage.getItem('student');
+    if (!raw) {
+      navigate('/student-auth');
+      return;
+    }
+    try {
+      const parsed: LocalStudent = JSON.parse(raw);
+      setStudent(parsed);
+    } catch (err) {
+      localStorage.removeItem('student');
+      navigate('/student-auth');
+    }
+  }, [navigate]);
 
   const toggleSubject = (subjectId: string) => {
     setExpandedSubject(expandedSubject === subjectId ? null : subjectId);
   };
 
-   const handleTopicClick = (subjectId: string, topic: string) => {
+  const handleTopicClick = (subjectId: string, topic: string) => {
     if (subjectId === 'sst' && topic === 'Geography of India') {
       setActiveSubject('sst');
       setActiveTopic('Geography of India');
@@ -88,20 +99,23 @@ const StudentDashboard: React.FC<StudentDashboardProps> = ({
     }
   };
 
+  const handleBack = () => {
+    navigate('/');
+  };
+
+  const getClassColors = (classNum: number) => {
+    if (classNum <= 8) return 'from-vibrant-turquoise to-vibrant-blue';
+    if (classNum <= 10) return 'from-pastel-blue to-pastel-teal';
+    return 'from-mature-navy to-mature-forest';
+  };
+
+  // If a topic is selected, show its special component
   if (activeSubject === 'sst' && activeTopic === 'Geography of India') {
     return (
       <div className="min-h-screen bg-background">
         <div className="p-4">
-          <Button
-            onClick={() => {
-              setActiveSubject(null);
-              setActiveTopic(null);
-            }}
-            variant="outline"
-            className="mb-4"
-          >
-            <Home className="w-4 h-4 mr-2" />
-            Back to Dashboard
+          <Button onClick={() => { setActiveSubject(null); setActiveTopic(null); }} variant="outline" className="mb-4">
+            <Home className="w-4 h-4 mr-2" /> Back to Dashboard
           </Button>
         </div>
         <InteractiveIndiaMap />
@@ -111,16 +125,8 @@ const StudentDashboard: React.FC<StudentDashboardProps> = ({
     return (
       <div className="min-h-screen bg-background">
         <div className="p-4">
-          <Button
-            onClick={() => {
-              setActiveSubject(null);
-              setActiveTopic(null);
-            }}
-            variant="outline"
-            className="mb-4"
-          >
-            <Home className="w-4 h-4 mr-2" />
-            Back to Dashboard
+          <Button onClick={() => { setActiveSubject(null); setActiveTopic(null); }} variant="outline" className="mb-4">
+            <Home className="w-4 h-4 mr-2" /> Back to Dashboard
           </Button>
         </div>
         <ArithmeticPage />
@@ -128,36 +134,24 @@ const StudentDashboard: React.FC<StudentDashboardProps> = ({
     );
   }
 
-  const getClassColors = (classNum: number) => {
-    if (classNum <= 8) return 'from-vibrant-turquoise to-vibrant-blue';
-    if (classNum <= 10) return 'from-pastel-blue to-pastel-teal';
-    return 'from-mature-navy to-mature-forest';
-  };
-
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <div className={`bg-gradient-to-r ${getClassColors(selectedClass)} text-white p-6`}>
+      <div className={`bg-gradient-to-r ${getClassColors(student?.class || 6)} text-white p-6`}>
         <div className="flex justify-between items-center mb-4">
-          <Button
-            onClick={onBack}
-            variant="ghost"
-            className="text-white hover:bg-white/20"
-          >
-            <Home className="w-4 h-4 mr-2" />
-            Home
+          <Button onClick={handleBack} variant="ghost" className="text-white hover:bg-white/20">
+            <Home className="w-4 h-4 mr-2" /> Home
           </Button>
           <Badge variant="secondary" className="bg-white/20 text-white border-white/30">
-            Class {selectedClass}
+            Class {student?.class ?? '--'}
           </Badge>
         </div>
-        
         <div className="text-center">
           <h1 className="text-3xl font-heading font-bold mb-2">
-            Welcome back, {studentName}!
+            Welcome back, {student?.name ?? 'Student'}!
           </h1>
           <p className="text-lg font-body opacity-90">
-            Roll Number: {studentRoll}
+            Roll Number: {student?.roll_number ?? '--'}
           </p>
           <div className="flex items-center justify-center mt-4 space-x-4">
             <div className="flex items-center">
@@ -171,112 +165,87 @@ const StudentDashboard: React.FC<StudentDashboardProps> = ({
         </div>
       </div>
 
-     {/* Dashboard Content */}
-<div className="p-6">
-  <div className="max-w-4xl mx-auto">
+      {/* Dashboard Content */}
+      <div className="p-6">
+        <div className="max-w-4xl mx-auto">
 
-    {/* Quick Stats - moved to top */}
-    <div className="mb-8 grid grid-cols-2 md:grid-cols-4 gap-4">
-      <Card className="text-center p-4">
-        <div className="text-2xl font-heading font-bold text-vibrant-turquoise">
-          12
-        </div>
-        <div className="text-sm font-body text-muted-foreground">
-          Lessons Completed
-        </div>
-      </Card>
-      <Card className="text-center p-4">
-        <div className="text-2xl font-heading font-bold text-vibrant-orange">
-          45
-        </div>
-        <div className="text-sm font-body text-muted-foreground">
-          Games Played
-        </div>
-      </Card>
-      <Card className="text-center p-4">
-        <div className="text-2xl font-heading font-bold text-vibrant-green">
-          87%
-        </div>
-        <div className="text-sm font-body text-muted-foreground">
-          Average Score
-        </div>
-      </Card>
-      <Card className="text-center p-4">
-        <div className="text-2xl font-heading font-bold text-vibrant-blue">
-          5
-        </div>
-        <div className="text-sm font-body text-muted-foreground">
-          Achievements
-        </div>
-      </Card>
-    </div>
+          {/* Quick Stats */}
+          <div className="mb-8 grid grid-cols-2 md:grid-cols-4 gap-4">
+            <Card className="text-center p-4">
+              <div className="text-2xl font-heading font-bold text-vibrant-turquoise">12</div>
+              <div className="text-sm font-body text-muted-foreground">Lessons Completed</div>
+            </Card>
+            <Card className="text-center p-4">
+              <div className="text-2xl font-heading font-bold text-vibrant-orange">45</div>
+              <div className="text-sm font-body text-muted-foreground">Games Played</div>
+            </Card>
+            <Card className="text-center p-4">
+              <div className="text-2xl font-heading font-bold text-vibrant-green">87%</div>
+              <div className="text-sm font-body text-muted-foreground">Average Score</div>
+            </Card>
+            <Card className="text-center p-4">
+              <div className="text-2xl font-heading font-bold text-vibrant-blue">5</div>
+              <div className="text-sm font-body text-muted-foreground">Achievements</div>
+            </Card>
+          </div>
 
-    {/* Subject Cards Grid - moved below quick stats */}
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-      {subjects.map((subject) => {
-        const IconComponent = subject.icon;
-        const isExpanded = expandedSubject === subject.id;
-        
-        return (
-          <Card key={subject.id} className="hover:shadow-lg transition-all duration-300">
-            <CardHeader 
-              className="cursor-pointer"
-              onClick={() => toggleSubject(subject.id)}
-            >
-              <div className="flex items-center space-x-4">
-                <div className={`p-3 rounded-lg ${subject.color} text-white`}>
-                  <IconComponent className="w-6 h-6" />
-                </div>
-                <div className="flex-1">
-                  <CardTitle className="font-heading text-lg">
-                    {subject.name}
-                  </CardTitle>
-                  <div className="mt-2 space-y-1">
-                    <div className="flex justify-between text-sm font-body">
-                      <span>Progress</span>
-                      <span>{subject.progress}%</span>
+          {/* Subject Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {subjects.map((subject) => {
+              const IconComponent = subject.icon;
+              const isExpanded = expandedSubject === subject.id;
+
+              return (
+                <Card key={subject.id} className="hover:shadow-lg transition-all duration-300">
+                  <CardHeader className="cursor-pointer" onClick={() => toggleSubject(subject.id)}>
+                    <div className="flex items-center space-x-4">
+                      <div className={`p-3 rounded-lg ${subject.color} text-white`}>
+                        <IconComponent className="w-6 h-6" />
+                      </div>
+                      <div className="flex-1">
+                        <CardTitle className="font-heading text-lg">{subject.name}</CardTitle>
+                        <div className="mt-2 space-y-1">
+                          <div className="flex justify-between text-sm font-body">
+                            <span>Progress</span>
+                            <span>{subject.progress}%</span>
+                          </div>
+                          <Progress value={subject.progress} className="h-2" />
+                        </div>
+                      </div>
+                      <ChevronDown className={`w-5 h-5 transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
                     </div>
-                    <Progress value={subject.progress} className="h-2" />
-                  </div>
-                </div>
-                <ChevronDown 
-                  className={`w-5 h-5 transition-transform ${isExpanded ? 'rotate-180' : ''}`}
-                />
-              </div>
-            </CardHeader>
-            
-            {isExpanded && (
-              <CardContent className="animate-slide-up">
-                <div className="space-y-2">
-                  <h4 className="font-heading font-semibold text-muted-foreground">
-                    Topics Available:
-                  </h4>
-                  <div className="grid gap-2">
-                    {subject.topics.map((topic, index) => (
-                      <Button
-                        key={index}
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handleTopicClick(subject.id, topic)}
-                        className="justify-start font-body hover:bg-muted"
-                      >
-                        <Play className="w-4 h-4 mr-2" />
-                        {topic}
-                      </Button>
-                    ))}
-                  </div>
-                </div>
-              </CardContent>
-            )}
-          </Card>
-        );
-      })}
-    </div>
-  </div>
-</div>
-</div>
+                  </CardHeader>
 
+                  {isExpanded && (
+                    <CardContent className="animate-slide-up">
+                      <div className="space-y-2">
+                        <h4 className="font-heading font-semibold text-muted-foreground">
+                          Topics Available:
+                        </h4>
+                        <div className="grid gap-2">
+                          {subject.topics.map((topic, index) => (
+                            <Button
+                              key={index}
+                              variant="outline"
+                              size="sm"
+                              onClick={() => handleTopicClick(subject.id, topic)}
+                              className="justify-start font-body hover:bg-muted"
+                            >
+                              <Play className="w-4 h-4 mr-2" />
+                              {topic}
+                            </Button>
+                          ))}
+                        </div>
+                      </div>
+                    </CardContent>
+                  )}
+                </Card>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };
-
 export default StudentDashboard;
