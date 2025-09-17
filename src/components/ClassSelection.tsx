@@ -9,18 +9,20 @@ interface ClassSelectionProps {
 }
 
 const classes = [
-  { number: 6, label: 'Class 6', colors: 'bg-vibrant-turquoise hover:bg-vibrant-blue', icon: BookOpen },
-  { number: 7, label: 'Class 7', colors: 'bg-vibrant-orange hover:bg-vibrant-green', icon: BookOpen },
-  { number: 8, label: 'Class 8', colors: 'bg-vibrant-green hover:bg-vibrant-turquoise', icon: BookOpen },
-  { number: 9, label: 'Class 9', colors: 'bg-pastel-blue hover:bg-pastel-teal', icon: GraduationCap },
-  { number: 10, label: 'Class 10', colors: 'bg-pastel-peach hover:bg-pastel-yellow', icon: GraduationCap },
-  { number: 11, label: 'Class 11', colors: 'bg-mature-navy hover:bg-mature-forest', icon: GraduationCap },
-  { number: 12, label: 'Class 12', colors: 'bg-mature-burgundy hover:bg-mature-navy', icon: GraduationCap },
+  { number: 6, label: 'Class 6', colors: 'bg-sky-400 hover:bg-yellow-400', icon: BookOpen },
+  { number: 7, label: 'Class 7', colors: 'bg-green-400 hover:bg-red-400', icon: BookOpen },
+  { number: 8, label: 'Class 8', colors: 'bg-cyan-700 hover:bg-sky-300', icon: BookOpen },
+  { number: 9, label: 'Class 9', colors: 'bg-teal-400 hover:bg-orange-400', icon: GraduationCap },
+  { number: 10, label: 'Class 10', colors: 'bg-lime-400 hover:bg-violet-400', icon: GraduationCap },
+  { number: 11, label: 'Class 11', colors: 'bg-sky-300 hover:bg-cyan-700', icon: GraduationCap },
+  { number: 12, label: 'Class 12', colors: 'bg-pink-600 hover:bg-gray-800', icon: GraduationCap },
 ];
+
 
 const ClassSelection: React.FC<ClassSelectionProps> = ({ onClassSelect, onTeacherSelect }) => {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-warm p-4">
+<div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-sky-100 via-blue-200 to-indigo-300 p-4">
+
       <div className="w-full max-w-4xl mx-auto animate-fade-in">
         <div className="text-center mb-8">
           <h1 className="text-4xl md:text-5xl font-heading font-bold text-foreground mb-4">
