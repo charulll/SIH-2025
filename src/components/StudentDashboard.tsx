@@ -16,6 +16,7 @@ import {
   Play
 } from 'lucide-react';
 import InteractiveIndiaMap from './InteractiveIndiaMap';
+import ArithmeticPage from './Arithmetic'; 
 
 interface StudentDashboardProps {
   studentName: string;
@@ -67,23 +68,35 @@ const StudentDashboard: React.FC<StudentDashboardProps> = ({
 }) => {
   const [expandedSubject, setExpandedSubject] = useState<string | null>(null);
   const [showMapGame, setShowMapGame] = useState(false);
+   const [activeSubject, setActiveSubject] = useState<string | null>(null);
+  const [activeTopic, setActiveTopic] = useState<string | null>(null);
 
   const toggleSubject = (subjectId: string) => {
     setExpandedSubject(expandedSubject === subjectId ? null : subjectId);
   };
 
-  const handleTopicClick = (subjectId: string, topic: string) => {
+   const handleTopicClick = (subjectId: string, topic: string) => {
     if (subjectId === 'sst' && topic === 'Geography of India') {
-      setShowMapGame(true);
+      setActiveSubject('sst');
+      setActiveTopic('Geography of India');
+    } else if (subjectId === 'math' && topic === 'Arithmetic') {
+      setActiveSubject('math');
+      setActiveTopic('Arithmetic');
+    } else {
+      setActiveSubject(null);
+      setActiveTopic(null);
     }
   };
 
-  if (showMapGame) {
+  if (activeSubject === 'sst' && activeTopic === 'Geography of India') {
     return (
       <div className="min-h-screen bg-background">
         <div className="p-4">
           <Button
-            onClick={() => setShowMapGame(false)}
+            onClick={() => {
+              setActiveSubject(null);
+              setActiveTopic(null);
+            }}
             variant="outline"
             className="mb-4"
           >
@@ -92,6 +105,25 @@ const StudentDashboard: React.FC<StudentDashboardProps> = ({
           </Button>
         </div>
         <InteractiveIndiaMap />
+      </div>
+    );
+  } else if (activeSubject === 'math' && activeTopic === 'Arithmetic') {
+    return (
+      <div className="min-h-screen bg-background">
+        <div className="p-4">
+          <Button
+            onClick={() => {
+              setActiveSubject(null);
+              setActiveTopic(null);
+            }}
+            variant="outline"
+            className="mb-4"
+          >
+            <Home className="w-4 h-4 mr-2" />
+            Back to Dashboard
+          </Button>
+        </div>
+        <ArithmeticPage />
       </div>
     );
   }
@@ -139,108 +171,111 @@ const StudentDashboard: React.FC<StudentDashboardProps> = ({
         </div>
       </div>
 
-      {/* Dashboard Content */}
-      <div className="p-6">
-        <div className="max-w-4xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {subjects.map((subject) => {
-              const IconComponent = subject.icon;
-              const isExpanded = expandedSubject === subject.id;
-              
-              return (
-                <Card key={subject.id} className="hover:shadow-lg transition-all duration-300">
-                  <CardHeader 
-                    className="cursor-pointer"
-                    onClick={() => toggleSubject(subject.id)}
-                  >
-                    <div className="flex items-center space-x-4">
-                      <div className={`p-3 rounded-lg ${subject.color} text-white`}>
-                        <IconComponent className="w-6 h-6" />
-                      </div>
-                      <div className="flex-1">
-                        <CardTitle className="font-heading text-lg">
-                          {subject.name}
-                        </CardTitle>
-                        <div className="mt-2 space-y-1">
-                          <div className="flex justify-between text-sm font-body">
-                            <span>Progress</span>
-                            <span>{subject.progress}%</span>
-                          </div>
-                          <Progress value={subject.progress} className="h-2" />
-                        </div>
-                      </div>
-                      <ChevronDown 
-                        className={`w-5 h-5 transition-transform ${isExpanded ? 'rotate-180' : ''}`}
-                      />
-                    </div>
-                  </CardHeader>
-                  
-                  {isExpanded && (
-                    <CardContent className="animate-slide-up">
-                      <div className="space-y-2">
-                        <h4 className="font-heading font-semibold text-muted-foreground">
-                          Topics Available:
-                        </h4>
-                        <div className="grid gap-2">
-                          {subject.topics.map((topic, index) => (
-                            <Button
-                              key={index}
-                              variant="outline"
-                              size="sm"
-                              onClick={() => handleTopicClick(subject.id, topic)}
-                              className="justify-start font-body hover:bg-muted"
-                            >
-                              <Play className="w-4 h-4 mr-2" />
-                              {topic}
-                            </Button>
-                          ))}
-                        </div>
-                      </div>
-                    </CardContent>
-                  )}
-                </Card>
-              );
-            })}
-          </div>
+     {/* Dashboard Content */}
+<div className="p-6">
+  <div className="max-w-4xl mx-auto">
 
-          {/* Quick Stats */}
-          <div className="mt-8 grid grid-cols-2 md:grid-cols-4 gap-4">
-            <Card className="text-center p-4">
-              <div className="text-2xl font-heading font-bold text-vibrant-turquoise">
-                12
-              </div>
-              <div className="text-sm font-body text-muted-foreground">
-                Lessons Completed
-              </div>
-            </Card>
-            <Card className="text-center p-4">
-              <div className="text-2xl font-heading font-bold text-vibrant-orange">
-                45
-              </div>
-              <div className="text-sm font-body text-muted-foreground">
-                Games Played
-              </div>
-            </Card>
-            <Card className="text-center p-4">
-              <div className="text-2xl font-heading font-bold text-vibrant-green">
-                87%
-              </div>
-              <div className="text-sm font-body text-muted-foreground">
-                Average Score
-              </div>
-            </Card>
-            <Card className="text-center p-4">
-              <div className="text-2xl font-heading font-bold text-vibrant-blue">
-                5
-              </div>
-              <div className="text-sm font-body text-muted-foreground">
-                Achievements
-              </div>
-            </Card>
-          </div>
+    {/* Quick Stats - moved to top */}
+    <div className="mb-8 grid grid-cols-2 md:grid-cols-4 gap-4">
+      <Card className="text-center p-4">
+        <div className="text-2xl font-heading font-bold text-vibrant-turquoise">
+          12
         </div>
-      </div>
+        <div className="text-sm font-body text-muted-foreground">
+          Lessons Completed
+        </div>
+      </Card>
+      <Card className="text-center p-4">
+        <div className="text-2xl font-heading font-bold text-vibrant-orange">
+          45
+        </div>
+        <div className="text-sm font-body text-muted-foreground">
+          Games Played
+        </div>
+      </Card>
+      <Card className="text-center p-4">
+        <div className="text-2xl font-heading font-bold text-vibrant-green">
+          87%
+        </div>
+        <div className="text-sm font-body text-muted-foreground">
+          Average Score
+        </div>
+      </Card>
+      <Card className="text-center p-4">
+        <div className="text-2xl font-heading font-bold text-vibrant-blue">
+          5
+        </div>
+        <div className="text-sm font-body text-muted-foreground">
+          Achievements
+        </div>
+      </Card>
     </div>
+
+    {/* Subject Cards Grid - moved below quick stats */}
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      {subjects.map((subject) => {
+        const IconComponent = subject.icon;
+        const isExpanded = expandedSubject === subject.id;
+        
+        return (
+          <Card key={subject.id} className="hover:shadow-lg transition-all duration-300">
+            <CardHeader 
+              className="cursor-pointer"
+              onClick={() => toggleSubject(subject.id)}
+            >
+              <div className="flex items-center space-x-4">
+                <div className={`p-3 rounded-lg ${subject.color} text-white`}>
+                  <IconComponent className="w-6 h-6" />
+                </div>
+                <div className="flex-1">
+                  <CardTitle className="font-heading text-lg">
+                    {subject.name}
+                  </CardTitle>
+                  <div className="mt-2 space-y-1">
+                    <div className="flex justify-between text-sm font-body">
+                      <span>Progress</span>
+                      <span>{subject.progress}%</span>
+                    </div>
+                    <Progress value={subject.progress} className="h-2" />
+                  </div>
+                </div>
+                <ChevronDown 
+                  className={`w-5 h-5 transition-transform ${isExpanded ? 'rotate-180' : ''}`}
+                />
+              </div>
+            </CardHeader>
+            
+            {isExpanded && (
+              <CardContent className="animate-slide-up">
+                <div className="space-y-2">
+                  <h4 className="font-heading font-semibold text-muted-foreground">
+                    Topics Available:
+                  </h4>
+                  <div className="grid gap-2">
+                    {subject.topics.map((topic, index) => (
+                      <Button
+                        key={index}
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleTopicClick(subject.id, topic)}
+                        className="justify-start font-body hover:bg-muted"
+                      >
+                        <Play className="w-4 h-4 mr-2" />
+                        {topic}
+                      </Button>
+                    ))}
+                  </div>
+                </div>
+              </CardContent>
+            )}
+          </Card>
+        );
+      })}
+    </div>
+  </div>
+</div>
+</div>
+
   );
 };
 
