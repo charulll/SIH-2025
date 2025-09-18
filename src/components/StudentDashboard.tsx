@@ -5,6 +5,11 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
+import QuizGame from '@/components/QuizGame';
+import FoodChainGame from '@/components/FoodChainGame';
+import LevelSelector from '@/components/LevelSelector';
+import { gameLevels } from '@/data/foodChain';
+
 import { 
   Calculator, 
   Atom, 
@@ -49,18 +54,23 @@ const subjects = [
     color: 'bg-vibrant-green',
     topics: ['Physics', 'Chemistry', 'Biology', 'Environmental Science']
   },
-  {
-    id: 'english',
-    name: 'English',
+ {
+    id: 'odia',
+    name: 'Odia',
     icon: PenTool,
-    progress: 83,
+    progress: 45,
     color: 'bg-vibrant-blue',
-    topics: ['Grammar', 'Literature', 'Writing Skills', 'Speaking Practice']
-  }
+    topics: ['Grammar', 'Literature', 'Writing Skills', 'Speaking Practice'],
+  },
 ];
 
 const StudentDashboard: React.FC = () => {
   const navigate = useNavigate();
+  const [showOdiaQuiz, setShowOdiaQuiz] = useState(false);
+const [showScienceGame, setShowScienceGame] = useState(false);
+const [foodChainMenuState, setFoodChainMenuState] = useState<'menu' | 'playing'>('menu');
+const [selectedFoodChainLevel, setSelectedFoodChainLevel] = useState<typeof gameLevels[number] | null>(null);
+
   const [student, setStudent] = useState<LocalStudent | null>(null);
   const [expandedSubject, setExpandedSubject] = useState<string | null>(null);
   const [activeSubject, setActiveSubject] = useState<string | null>(null);
@@ -86,19 +96,36 @@ const StudentDashboard: React.FC = () => {
     setExpandedSubject(expandedSubject === subjectId ? null : subjectId);
   };
 
-  const handleTopicClick = (subjectId: string, topic: string) => {
-    if (subjectId === 'sst' && topic === 'Geography of India') {
-      setActiveSubject('sst');
-      setActiveTopic('Geography of India');
-    } else if (subjectId === 'math' && topic === 'Arithmetic') {
-      setActiveSubject('math');
-      setActiveTopic('Arithmetic');
-    } else {
-      setActiveSubject(null);
-      setActiveTopic(null);
-    }
-  };
+  // const handleTopicClick = (subjectId: string, topic: string) => {
+  //   if (subjectId === 'sst' && topic === 'Geography of India') {
+  //     setActiveSubject('sst');
+  //     setActiveTopic('Geography of India');
+  //   } else if (subjectId === 'math' && topic === 'Arithmetic') {
+  //     setActiveSubject('math');
+  //     setActiveTopic('Arithmetic');
+  //   } else {
+  //     setActiveSubject(null);
+  //     setActiveTopic(null);
+  //   }
+  // };
 
+  const handleTopicClick = (subjectId: string, topic: string) => {
+  if (subjectId === 'sst' && topic === 'Geography of India') {
+    setActiveSubject('sst');
+    setActiveTopic('Geography of India'); // your original handling
+  } else if (subjectId === 'math' && topic === 'Arithmetic') {
+    setActiveSubject('math');
+    setActiveTopic('Arithmetic'); // your original handling
+  } else if (subjectId === 'odia' && topic === 'Grammar') {
+    setShowOdiaQuiz(true);
+  } else if (subjectId === 'science' && topic === 'Biology') {
+    setShowScienceGame(true);
+   setFoodChainMenuState('menu');
+  } else {
+    setActiveSubject(null);
+    setActiveTopic(null);
+  }
+};
   const handleBack = () => {
     navigate('/');
   };
@@ -133,6 +160,53 @@ const StudentDashboard: React.FC = () => {
       </div>
     );
   }
+  if (showOdiaQuiz) {
+  return (
+    <div className="min-h-screen bg-background">
+      <div className="p-4">
+        <Button onClick={() => setShowOdiaQuiz(false)} variant="outline" className="mb-4">
+          <Home className="w-4 h-4 mr-2" /> Back to Dashboard
+        </Button>
+      </div>
+      <QuizGame />
+    </div>
+  );
+}
+
+if (showScienceGame) {
+  return (
+    <div className="min-h-screen bg-background">
+      <div className="p-4">
+        <Button
+          onClick={() => {
+            setShowScienceGame(false);
+            setFoodChainMenuState('menu');
+            setSelectedFoodChainLevel(null);
+          }}
+          variant="outline"
+          className="mb-4"
+        >
+          <Home className="w-4 h-4 mr-2" /> Back to Dashboard
+        </Button>
+      </div>
+      {foodChainMenuState === 'menu' ? (
+        <LevelSelector
+          levels={gameLevels}
+          onLevelSelect={(level) => {
+            setSelectedFoodChainLevel(level);
+            setFoodChainMenuState('playing');
+          }}
+        />
+      ) : selectedFoodChainLevel ? (
+        <FoodChainGame
+          level={selectedFoodChainLevel}
+          onBackToMenu={() => setFoodChainMenuState('menu')}
+        />
+      ) : null}
+    </div>
+  );
+}
+
 
   return (
     <div className="min-h-screen bg-background">
