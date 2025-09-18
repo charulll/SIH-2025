@@ -49,9 +49,7 @@ const LanguageSelection: React.FC = () => {
               ))}
             </div>
             
-            <p className="text-xs text-muted-foreground font-body">
-              You can change this later in settings
-            </p>
+           
           </div>
         </CardContent>
       </Card>
