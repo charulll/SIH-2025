@@ -1,5 +1,3 @@
-VITE_API_URL=http;//localhost:5000
-
 /// <reference types="vite/client" />
 
 interface ImportMetaEnv {

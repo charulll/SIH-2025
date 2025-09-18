@@ -1,6 +1,6 @@
 // src/pages/TeacherAuth.jsx
 import React, { useState } from 'react';
-const API = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+const API = import.meta.env.VITE_API_URL;
 export default function TeacherAuth() {
   const [isRegister, setIsRegister] = useState(false);
   const [form, setForm] = useState({ name:'', login_id:'', password:'', subject:''});
