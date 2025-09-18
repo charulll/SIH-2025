@@ -8,10 +8,12 @@ const StudentAuth = () => {
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
 
-  // ✅ Make this async
+  // Use environment variable for API base URL
+const apiBase = import.meta.env.VITE_API_URL;
+
   const handleLogin = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/students/login", {
+      const res = await fetch(`${apiBase}/api/students/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ roll_number: roll, class_name: studentClass }),
