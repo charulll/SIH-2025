@@ -1,4 +1,3 @@
-// src/components/TeacherDashboard.tsx
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -44,22 +43,20 @@ const TeacherDashboard: React.FC = () => {
   useEffect(() => {
     const raw = localStorage.getItem('teacher');
     if (!raw) {
-      // if no teacher in storage, send to login
-      navigate('/teacher-auth');
+      // Instead of navigating to /teacher-auth, set a guest teacher fallback
+      setTeacher({ login_id: 'guest', name: 'Guest Teacher', subject: 'General' });
       return;
     }
     try {
       const parsed: LocalTeacher = JSON.parse(raw);
       setTeacher(parsed);
     } catch (err) {
-      // corrupted data -> clear and redirect
       localStorage.removeItem('teacher');
-      navigate('/teacher-auth');
+      setTeacher({ login_id: 'guest', name: 'Guest Teacher', subject: 'General' });
     }
-  }, [navigate]);
+  }, []);
 
   const handleBack = () => {
-    // go to home or previous screen — change path if you need a different target
     navigate('/');
   };
 
@@ -80,7 +77,7 @@ const TeacherDashboard: React.FC = () => {
             Teacher ID: {teacher?.login_id ?? '—'}
           </Badge>
         </div>
-        
+
         <div className="text-center">
           <h1 className="text-3xl font-heading font-bold mb-2">
             Welcome, {teacher?.name ?? teacher?.login_id ?? 'Teacher'}
@@ -107,7 +104,7 @@ const TeacherDashboard: React.FC = () => {
                 </div>
               </CardContent>
             </Card>
-            
+
             <Card className="shadow-lg">
               <CardContent className="p-6 text-center">
                 <BookOpen className="w-8 h-8 text-vibrant-orange mx-auto mb-2" />
@@ -119,7 +116,7 @@ const TeacherDashboard: React.FC = () => {
                 </div>
               </CardContent>
             </Card>
-            
+
             <Card className="shadow-lg">
               <CardContent className="p-6 text-center">
                 <TrendingUp className="w-8 h-8 text-vibrant-green mx-auto mb-2" />
@@ -131,7 +128,7 @@ const TeacherDashboard: React.FC = () => {
                 </div>
               </CardContent>
             </Card>
-            
+
             <Card className="shadow-lg">
               <CardContent className="p-6 text-center">
                 <Award className="w-8 h-8 text-vibrant-blue mx-auto mb-2" />
@@ -155,7 +152,7 @@ const TeacherDashboard: React.FC = () => {
                   Add Class
                 </Button>
               </div>
-              
+
               <div className="space-y-4">
                 {classes.map((classItem) => (
                   <Card key={classItem.id} className="hover:shadow-lg transition-all duration-300">
@@ -178,7 +175,7 @@ const TeacherDashboard: React.FC = () => {
                           </div>
                           <Progress value={classItem.avgProgress} className="h-2" />
                         </div>
-                        
+
                         <div className="flex justify-between items-center pt-2">
                           <span className="text-sm font-body text-muted-foreground">
                             {classItem.subjects} subjects active
@@ -270,4 +267,5 @@ const TeacherDashboard: React.FC = () => {
     </div>
   );
 };
+
 export default TeacherDashboard;

@@ -1,4 +1,3 @@
-// src/components/StudentDashboard.tsx
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -54,7 +53,7 @@ const subjects = [
     color: 'bg-vibrant-green',
     topics: ['Physics', 'Chemistry', 'Biology', 'Environmental Science']
   },
- {
+  {
     id: 'odia',
     name: 'Odia',
     icon: PenTool,
@@ -67,65 +66,53 @@ const subjects = [
 const StudentDashboard: React.FC = () => {
   const navigate = useNavigate();
   const [showOdiaQuiz, setShowOdiaQuiz] = useState(false);
-const [showScienceGame, setShowScienceGame] = useState(false);
-const [foodChainMenuState, setFoodChainMenuState] = useState<'menu' | 'playing'>('menu');
-const [selectedFoodChainLevel, setSelectedFoodChainLevel] = useState<typeof gameLevels[number] | null>(null);
+  const [showScienceGame, setShowScienceGame] = useState(false);
+  const [foodChainMenuState, setFoodChainMenuState] = useState<'menu' | 'playing'>('menu');
+  const [selectedFoodChainLevel, setSelectedFoodChainLevel] = useState<typeof gameLevels[number] | null>(null);
 
   const [student, setStudent] = useState<LocalStudent | null>(null);
   const [expandedSubject, setExpandedSubject] = useState<string | null>(null);
   const [activeSubject, setActiveSubject] = useState<string | null>(null);
   const [activeTopic, setActiveTopic] = useState<string | null>(null);
 
-  // Load student from localStorage
+  // Load student from localStorage or fallback to guest profile
   useEffect(() => {
     const raw = localStorage.getItem('student');
     if (!raw) {
-      navigate('/student-auth');
+      // Set a default guest user profile
+      setStudent({ name: 'Guest', roll_number: 'N/A', class: 6 });
       return;
     }
     try {
       const parsed: LocalStudent = JSON.parse(raw);
       setStudent(parsed);
     } catch (err) {
-      localStorage.removeItem('student');
-      navigate('/student-auth');
+      setStudent({ name: 'Guest', roll_number: 'N/A', class: 6 });
     }
-  }, [navigate]);
+  }, []);
 
   const toggleSubject = (subjectId: string) => {
     setExpandedSubject(expandedSubject === subjectId ? null : subjectId);
   };
 
-  // const handleTopicClick = (subjectId: string, topic: string) => {
-  //   if (subjectId === 'sst' && topic === 'Geography of India') {
-  //     setActiveSubject('sst');
-  //     setActiveTopic('Geography of India');
-  //   } else if (subjectId === 'math' && topic === 'Arithmetic') {
-  //     setActiveSubject('math');
-  //     setActiveTopic('Arithmetic');
-  //   } else {
-  //     setActiveSubject(null);
-  //     setActiveTopic(null);
-  //   }
-  // };
-
   const handleTopicClick = (subjectId: string, topic: string) => {
-  if (subjectId === 'sst' && topic === 'Geography of India') {
-    setActiveSubject('sst');
-    setActiveTopic('Geography of India'); // your original handling
-  } else if (subjectId === 'math' && topic === 'Arithmetic') {
-    setActiveSubject('math');
-    setActiveTopic('Arithmetic'); // your original handling
-  } else if (subjectId === 'odia' && topic === 'Grammar') {
-    setShowOdiaQuiz(true);
-  } else if (subjectId === 'science' && topic === 'Biology') {
-    setShowScienceGame(true);
-   setFoodChainMenuState('menu');
-  } else {
-    setActiveSubject(null);
-    setActiveTopic(null);
-  }
-};
+    if (subjectId === 'sst' && topic === 'Geography of India') {
+      setActiveSubject('sst');
+      setActiveTopic('Geography of India');
+    } else if (subjectId === 'math' && topic === 'Arithmetic') {
+      setActiveSubject('math');
+      setActiveTopic('Arithmetic');
+    } else if (subjectId === 'odia' && topic === 'Grammar') {
+      setShowOdiaQuiz(true);
+    } else if (subjectId === 'science' && topic === 'Biology') {
+      setShowScienceGame(true);
+      setFoodChainMenuState('menu');
+    } else {
+      setActiveSubject(null);
+      setActiveTopic(null);
+    }
+  };
+
   const handleBack = () => {
     navigate('/');
   };
@@ -136,7 +123,7 @@ const [selectedFoodChainLevel, setSelectedFoodChainLevel] = useState<typeof game
     return 'from-mature-navy to-mature-forest';
   };
 
-  // If a topic is selected, show its special component
+  // Render topic-specific pages
   if (activeSubject === 'sst' && activeTopic === 'Geography of India') {
     return (
       <div className="min-h-screen bg-background">
@@ -160,53 +147,53 @@ const [selectedFoodChainLevel, setSelectedFoodChainLevel] = useState<typeof game
       </div>
     );
   }
+
   if (showOdiaQuiz) {
-  return (
-    <div className="min-h-screen bg-background">
-      <div className="p-4">
-        <Button onClick={() => setShowOdiaQuiz(false)} variant="outline" className="mb-4">
-          <Home className="w-4 h-4 mr-2" /> Back to Dashboard
-        </Button>
+    return (
+      <div className="min-h-screen bg-background">
+        <div className="p-4">
+          <Button onClick={() => setShowOdiaQuiz(false)} variant="outline" className="mb-4">
+            <Home className="w-4 h-4 mr-2" /> Back to Dashboard
+          </Button>
+        </div>
+        <QuizGame />
       </div>
-      <QuizGame />
-    </div>
-  );
-}
+    );
+  }
 
-if (showScienceGame) {
-  return (
-    <div className="min-h-screen bg-background">
-      <div className="p-4">
-        <Button
-          onClick={() => {
-            setShowScienceGame(false);
-            setFoodChainMenuState('menu');
-            setSelectedFoodChainLevel(null);
-          }}
-          variant="outline"
-          className="mb-4"
-        >
-          <Home className="w-4 h-4 mr-2" /> Back to Dashboard
-        </Button>
+  if (showScienceGame) {
+    return (
+      <div className="min-h-screen bg-background">
+        <div className="p-4">
+          <Button
+            onClick={() => {
+              setShowScienceGame(false);
+              setFoodChainMenuState('menu');
+              setSelectedFoodChainLevel(null);
+            }}
+            variant="outline"
+            className="mb-4"
+          >
+            <Home className="w-4 h-4 mr-2" /> Back to Dashboard
+          </Button>
+        </div>
+        {foodChainMenuState === 'menu' ? (
+          <LevelSelector
+            levels={gameLevels}
+            onLevelSelect={(level) => {
+              setSelectedFoodChainLevel(level);
+              setFoodChainMenuState('playing');
+            }}
+          />
+        ) : selectedFoodChainLevel ? (
+          <FoodChainGame
+            level={selectedFoodChainLevel}
+            onBackToMenu={() => setFoodChainMenuState('menu')}
+          />
+        ) : null}
       </div>
-      {foodChainMenuState === 'menu' ? (
-        <LevelSelector
-          levels={gameLevels}
-          onLevelSelect={(level) => {
-            setSelectedFoodChainLevel(level);
-            setFoodChainMenuState('playing');
-          }}
-        />
-      ) : selectedFoodChainLevel ? (
-        <FoodChainGame
-          level={selectedFoodChainLevel}
-          onBackToMenu={() => setFoodChainMenuState('menu')}
-        />
-      ) : null}
-    </div>
-  );
-}
-
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background">
