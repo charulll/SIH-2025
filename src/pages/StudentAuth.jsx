@@ -9,7 +9,8 @@ const StudentAuth = () => {
   const navigate = useNavigate();
 
   // Use environment variable for API base URL
-const apiBase = import.meta.env.VITE_API_URL;
+  const apiBase = import.meta.env.VITE_API_URL;
+  console.log("VITE API URL:", apiBase); // Debug statement to confirm env variable
 
   const handleLogin = async () => {
     try {
